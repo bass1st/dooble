@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace API.Extensions
             // AddSingleton() keeps the service alive through the lifespan of an app, which is not appropriate for this task
             // AddTransient() keeps the service alive only up until the method execution is finished, which is not ideal for http requests
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             // Lambda expression (passing an expression as a parameter)
             // Add db connection string from appsettings.Development.json
             services.AddDbContext<DataContext>(options =>
