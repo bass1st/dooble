@@ -4,13 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  baseUrl: string = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   // Create an observable to store an user
   // ReplaySubject is kind of an "object buffer" observable, we define how many recent value(s) of an object we want to store
   // In this case, the size of a buffer is (1), hence one and only value is stored
