@@ -17,10 +17,12 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             // AddScoped() method keeps the service alive until http request is completed. Exactly what's needed for creating a JWT token
             // AddSingleton() keeps the service alive through the lifespan of an app, which is not appropriate for this task
             // AddTransient() keeps the service alive only up until the method execution is finished, which is not ideal for http requests
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             // Lambda expression (passing an expression as a parameter)
