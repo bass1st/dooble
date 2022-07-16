@@ -25,10 +25,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                 }
                 // ES2019 JS feature that allows "flattening" of arrays
                 throw modalStateErrors.flat();
-              } else {
+              } else if (typeof(error.error) === 'object') {
                 // HTTP/2 spec removed statusText from the response, hence it always returns "OK" ( https://github.com/angular/angular/issues/23334 )
                 // That's why we have to modify the output with the following ternary expression
                 this.toastr.error(error.statusText === "OK" ? "Bad Request" : error.statusText, error.status);
+              } else {
+                this.toastr.error(error.error, error.status);
               }
               break;
             case 401:

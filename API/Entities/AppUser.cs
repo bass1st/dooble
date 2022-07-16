@@ -22,7 +22,9 @@ namespace API.Entities
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        // "One-to-many" relationship between AppUser entity and Photo class (one user -> many photos)
+        // "One-to-many" relationships
         public ICollection<Photo> Photos { get; set; }
+        public ICollection<UserLike> LikedUsers { get; set; }
+        public ICollection<UserLike> LikedByUsers { get; set; }
     }
 }
