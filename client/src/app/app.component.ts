@@ -11,7 +11,7 @@ import { AccountService } from './_services/account.service';
 export class AppComponent implements OnInit {
   title = 'dooble';
   users: any;
-  // Dependency injection using a contructor, similar to .NET
+
   constructor(private accountService: AccountService) {}
 
   ngOnInit() {

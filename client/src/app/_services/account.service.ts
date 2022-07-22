@@ -43,6 +43,10 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    user.roles = [];
+    const roles = this.getInfoFromToken(user.token).role;
+    // Return type may be a string (single role) or string[] (user with multiple roles)
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
@@ -50,5 +54,10 @@ export class AccountService {
   logout() {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+  }
+
+  // Token = [header, payload, signature]. Get user info from token payload (only signature part is encrypted)
+  getInfoFromToken(token) {
+    return JSON.parse(atob(token.split('.')[1]));
   }
 }
