@@ -25,10 +25,8 @@ namespace API.Extensions
             // AddTransient() keeps the service alive only up until the method execution is finished, which is not ideal for http requests
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPhotoService, PhotoService>();
-            services.AddScoped<ILikesRepository, LikesRepository>();
-            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<LogUserActivity>();
-            services.AddScoped<IUserRepository, UserRepository>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
             // Lambda expression (passing an expression as a parameter)
             // Add db connection string from appsettings.Development.json

@@ -4,8 +4,10 @@
 
 .chat {
     list-style: none;
+    overflow: scroll;
     margin: 0;
     padding: 0;
+    height: 500px;
 }
 
 .chat li {

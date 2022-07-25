@@ -8,7 +8,6 @@ import { environment } from 'src/environments/environment';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 import { Message } from '../_models/message';
 import { User } from '../_models/user';
-import { group } from 'console';
 import { Group } from '../_models/group';
 
 @Injectable({ providedIn: 'root' })
