@@ -16,10 +16,10 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() member: Member;
+  baseUrl = environment.apiUrl;
   user: User;
   uploader: FileUploader;
-  hasBaseDropzoneOver = false;
-  baseUrl = environment.apiUrl;
+  hasBaseDropzoneOver: boolean = false;
 
   constructor(private accountService: AccountService, private membersService: MembersService) {
     this.accountService.currentUser$.pipe(take(1)).subscribe(user => this.user = user);
@@ -29,8 +29,8 @@ export class PhotoEditorComponent implements OnInit {
     this.initializeUploader();
   }
 
-  fileOverBase(e: any) {
-    this.hasBaseDropzoneOver = e;
+  fileOverBase(event: any) {
+    this.hasBaseDropzoneOver = event;
   }
 
   setMainPhoto(photo: Photo) {
@@ -46,8 +46,8 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   deletePhoto(photoId: number) {
-    this.membersService.deletePhoto(photoId).subscribe(() => {
-      this.member.photos = this.member.photos.filter(x => x.id !== photoId);
+    this.membersService.deletePhoto(photoId).subscribe({
+      next: () => this.member.photos = this.member.photos.filter(x => x.id !== photoId)
     });
   }
 
@@ -62,9 +62,7 @@ export class PhotoEditorComponent implements OnInit {
       maxFileSize: 10 * 1024 * 1024
     });
 
-    this.uploader.onAfterAddingFile = (file) => {
-      file.withCredentials = false;
-    }
+    this.uploader.onAfterAddingFile = (file) => file.withCredentials = false;
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       if (response) {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -30,16 +31,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
             var gender = await _unitOfWork.UserRepository.GetUserGender(User.GetUsername());
             
             userParams.CurrentUsername = User.GetUsername();
 
-            if (string.IsNullOrEmpty(userParams.Gender))
-            {
-                userParams.Gender = gender == "male" ? "female" : "male";
-            }
+            if (string.IsNullOrEmpty(userParams.Gender)) userParams.Gender = gender == "male" ? "female" : "male";
             
             var users = await _unitOfWork.UserRepository.GetMembersAsync(userParams);
 
@@ -51,7 +49,9 @@ namespace API.Controllers
         [HttpGet("{username}", Name = "GetUser")]
         public async Task<ActionResult<MemberDto>> GetUser(string username)
         {
-            return await _unitOfWork.UserRepository.GetMemberAsync(username);
+            var currentUsername = User.GetUsername();
+
+            return await _unitOfWork.UserRepository.GetMemberAsync(username, isCurrentUser: currentUsername == username);
         }
 
         [HttpPut]
@@ -61,6 +61,7 @@ namespace API.Controllers
             var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(User.GetUsername());
 
             _mapper.Map(memberUpdateDto, user);
+
             _unitOfWork.UserRepository.Update(user);
 
             if (await _unitOfWork.Complete()) return NoContent();
@@ -83,15 +84,11 @@ namespace API.Controllers
                 PublicId = result.PublicId
             };
 
-            if (user.Photos.Count == 0) {
-                photo.IsMain = true;
-            }
-
             user.Photos.Add(photo);
 
             if (await _unitOfWork.Complete())
             {
-                return CreatedAtRoute("GetUser", new {username = user.UserName}, _mapper.Map<PhotoDto>(photo));
+                return CreatedAtRoute("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDto>(photo));
             }
 
             return BadRequest("Problem uploading photo.");
