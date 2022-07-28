@@ -4,7 +4,7 @@
         <ul class="chat" *ngIf="(messageService.messageThread$ | async)?.length > 0">
             <li *ngFor="let message of (messageService.messageThread$ | async)">
                 <div>
-                    <span class="chat-img float-right">
+                    <span class="chat-img float-end">
                         <img class="rounded-circle" src="{{ message.senderPhotoUrl || './assets/user.png' }}"
                             alt="{{ message.senderUsername }}">
                     </span>
@@ -31,7 +31,7 @@
                 <input type="text" class="form-control input-sm" placeholder="Send a private message"
                     name="messageContent" [(ngModel)]="messageContent" required>
                 <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit" [disabled]="!messageForm.valid || loading">
+                    <button class="btn btn-primary ms-2" type="submit" [disabled]="!messageForm.valid || loading">
                         Send <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
                     </button>
                 </div>
